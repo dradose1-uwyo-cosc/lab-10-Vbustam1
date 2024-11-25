@@ -1,23 +1,12 @@
-# Your Name Here
+# Vidal Bustamante
 # UWYO COSC 1010
-# Submission Date
-# Lab XX
-# Lab Section: 
-# Sources, people worked with, help given to: 
-# your
-# comments
-# here
+# 11/24/2024
+# Lab 10
+# Lab Section: 13?
+# Sources, people worked with, help given to: NA
+# That was a lot easier than I thought it would be. It just worked the first time round.
 
 #import modules you will need 
-
-from hashlib import sha256 
-from pathlib import Path
-
-def get_hash(to_hash):
-    """You can use """
-    return sha256(to_hash.encode('utf-8')).hexdigest().upper()
-
-
 
 # Files and Exceptions
 
@@ -43,3 +32,36 @@ def get_hash(to_hash):
 # Hash each individual password and compare it against the stored hash.
 # - When you find the match, print the plaintext version of the password.
 # - End your loop.
+
+from hashlib import sha256
+from pathlib import Path
+
+def get_hash(to_hash):
+    return sha256(to_hash.encode('utf-8')).hexdigest().upper()
+
+rockyou_path = Path("/workspaces/lab-10-Vbustam1/rockyou.txt")
+hash_path = Path("/workspaces/lab-10-Vbustam1/hash")
+
+try:
+    with open(hash_path, 'r') as hash_file:
+        target_hash = hash_file.read().strip()
+except FileNotFoundError:
+    print("Error: Hash file not found.")
+    exit(1)
+except Exception as e:
+    print(f"Error reading hash file: {e}")
+    exit(1)
+
+try:
+    with open(rockyou_path, 'r', encoding='utf-8', errors='ignore') as rockyou_file:
+        for line in rockyou_file:
+            password = line.strip()  
+            if get_hash(password) == target_hash:
+                print(f"Password found: {password}")
+                break
+        else:
+            print("Password not found in the list.")
+except FileNotFoundError:
+    print("Error: RockYou file not found.")
+except Exception as e:
+    print(f"Error reading RockYou file: {e}")
